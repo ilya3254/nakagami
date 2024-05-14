@@ -117,4 +117,4 @@ def build_nakagami_cdf(nu, loc):
     plt.show()
 
 # Пример с случайными параметрами
-build_nakagami_cdf(nu=2, loc=1)
+build_nakagami_cdf(nu=2, loc=2)
