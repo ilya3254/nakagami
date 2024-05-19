@@ -109,12 +109,80 @@ def build_nakagami_cdf(nu, loc):
     y = nakagami_cdf(x, nu, loc)
     #plt.figure(figsize=(8, 4))
     plt.plot(x, y, label=f'μ={nu}, ω={loc}')
-    plt.title('Распределение Накагами')
+    plt.title('Функция распределения')
     plt.xlabel('Значение')
     plt.ylabel('Вероятность')
     plt.legend()
     plt.grid(True)
     plt.show()
 
-# Пример с случайными параметрами
-build_nakagami_cdf(nu=2, loc=2)
+
+# МЕТОД МОМЕНТОВ
+from scipy.special import gamma
+from scipy.optimize import fsolve
+# Заданные значения
+X = -1.9115062633333346 + 2.518297  # == 0.6067907366666665
+s = 0.05884687599947229
+
+# Вспомогательная функция для решения системы уравнений
+def equations_old(vars):
+    mu, omega = vars
+    eq1 = omega - (X**2 + s)
+    eq2 = (gamma(mu + 0.5) / gamma(mu)) * np.sqrt((X**2 + s) / mu) - X
+    return [eq1, eq2]
+
+def equations(vars):
+    mu, omega = vars
+    eq1 = (gamma(mu + 0.5) / gamma(mu)) * np.sqrt(omega / mu) - X
+    eq2 = omega * (1 - 1/mu * ((gamma(mu + 0.5) / gamma(mu))**2)) - s
+    return [eq1, eq2]
+
+# Начальные приближения
+initial_guess = [0.5, 0.01]
+
+# Решение системы уравнений
+solution = fsolve(equations_old, initial_guess)
+
+mu_solution, omega_solution = solution
+
+print(f"ММ:\nmu = {mu_solution}")
+print(f"omega = {omega_solution}\n")
+#build_nakagami_cdf(nu=mu_solution, loc=omega_solution)
+
+
+# МЕТОД МАКСИМАЛЬНОГО ПРАВДОПОДОБИЯ
+from scipy.special import digamma
+
+"""sum2 = 0
+sumln = 0
+for x in nakagami:
+    #x += -1 * min(nakagami) + 0.1
+    sum2 += x*x
+    sumln += np.log(x)
+print(sum2)
+print(sumln)"""
+
+for i in range(len(nakagami)):
+    nakagami[i] *= -1
+data = np.array(nakagami)
+
+# Среднее квадратическое
+mean_square = np.mean(data**2)
+
+# Функция для поиска m
+def equations(m):
+    term1 = np.log(m)
+    term2 = digamma(m)
+    term3 = np.log(mean_square)
+    term4 = np.mean(np.log(data))
+    return term1 - term2 - term3 + term4
+
+# Инициализация и решение
+m_initial = 0.1  # Начальное приближение
+mu_solution = fsolve(equations, m_initial)[0]
+
+# Найденные параметры
+omega_solution = mean_square
+print(f"ММП:\nmu: {mu_solution}")
+print(f"omega: {omega_solution}")
+#build_nakagami_cdf(nu=mu_solution, loc=omega_solution)
