@@ -117,7 +117,7 @@ def build_nakagami_cdf(nu, loc):
     plt.show()
 
 
-# МЕТОД МОМЕНТОВ
+"""МЕТОД МОМЕНТОВ"""
 from scipy.special import gamma
 from scipy.optimize import fsolve
 # Заданные значения
@@ -150,7 +150,7 @@ print(f"omega = {omega_solution}\n")
 #build_nakagami_cdf(nu=mu_solution, loc=omega_solution)
 
 
-# МЕТОД МАКСИМАЛЬНОГО ПРАВДОПОДОБИЯ
+"""МЕТОД МАКСИМАЛЬНОГО ПРАВДОПОДОБИЯ"""
 from scipy.special import digamma
 
 """sum2 = 0
@@ -188,8 +188,8 @@ print(f"omega: {omega_solution}")
 #build_nakagami_cdf(nu=mu_solution, loc=omega_solution)
 
 
-#ПОСТРОЕНИЕ ГРАФИКА ТЕОРЕТИЧЕСКИХ ФУНКЦИЯ С НАЙДЕННЫМИ ПАРАМЕТРАМИ
-#И ЭМПИРИЧЕСКОЙ ФУНКЦИИ
+"""ПОСТРОЕНИЕ ГРАФИКА ТЕОРЕТИЧЕСКИХ ФУНКЦИЯ С НАЙДЕННЫМИ ПАРАМЕТРАМИ
+    И ЭМПИРИЧЕСКОЙ ФУНКЦИИ"""
 def build_edf2(sample, size):
     """Построение эмпирической функции распределения"""
     values = np.random.choice(sample, size=size)
@@ -266,7 +266,7 @@ for i in range(300):
     random_number = random.uniform(0, 1)
     veybull.append(num(random_number))
 
-build_edf(veybull, 300)
+#build_edf(veybull, 300)
 """"""
 
 samples = np.array(nakagami)
@@ -306,7 +306,7 @@ def estimate_parameters_moments(samples):
 
 m_mom, Omega_mom = estimate_parameters_moments(samples)
 print("\nММ: ", m_mom, Omega_mom)
-build_nakagami_cdf(nu=m_mom, loc=Omega_mom)
+#build_nakagami_cdf(nu=m_mom, loc=Omega_mom)
 
 # Проверка гипотезы с помощью метода моментов
 ks_stat_mom, ks_p_value_mom = kolmogorov_smirnov_test(samples, m_mom, Omega_mom)
@@ -356,7 +356,7 @@ plt.title('Сравнение теоретических и эмпирическ
 plt.xlabel('Значения')
 plt.ylabel('Функция распределения')
 plt.legend()
-plt.show()
+#plt.show()
 
 
 """ПРИМЕР"""
