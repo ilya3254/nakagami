@@ -266,7 +266,7 @@ for i in range(300):
     random_number = random.uniform(0, 1)
     veybull.append(num(random_number))
 
-#build_edf(veybull, 300)
+build_edf(veybull, 300)
 """"""
 
 samples = np.array(nakagami)
