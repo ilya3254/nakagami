@@ -6,6 +6,56 @@ nakagami = pd.read_csv("../6. Распределение_Накагами_var_6.
 nakagami = nakagami.squeeze().tolist()
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import gammainc
+def build_edf(sample, size, label):
+    """Построение эмпирической функции распределения для подвыборки из size элементов"""
+    values = np.random.choice(sample, size=size)
+    data_sorted = np.sort(values)
+
+    # Вычисляем значения ЭФР в точках, соответствующих отсортированным данным
+    n = len(data_sorted)
+    y_values = np.arange(1, n + 1) / n
+
+    # Визуализация эмпирической функции распределения
+    plt.step(data_sorted, y_values, where='post', label=label)
+    plt.xlabel('x')
+    plt.ylabel('Fn(x)')
+    plt.grid(True)
+
+# Предположим, что у вас есть переменная 'nakagami', которая содержит ваши данные
+# nakagami = ...
+min123 = min(nakagami)
+for i in range(len(nakagami)):
+    nakagami[i] -= min123
+
+for size in [10, 100, 200]:
+    build_edf(nakagami, size, f'ЭФР для {size} элементов')
+
+def nakagami_cdf(x, nu, loc):
+    return gammainc(nu, (nu / loc) * x**2)
+
+def build_nakagami_cdf(nu, loc):
+    x = np.linspace(min(nakagami), max(nakagami))
+    y = nakagami_cdf(x, nu, loc)
+    #plt.figure(figsize=(8, 4))
+    plt.plot(x, y, label=f'ТФР, μ={nu}, ω={loc}')
+    #plt.title('Функция распределения')
+    #plt.xlabel('Значение')
+    #plt.ylabel('Вероятность')
+    #plt.legend()
+    #plt.grid(True)
+    #plt.show()
+
+build_nakagami_cdf(3, 0.8)
+
+plt.title('Графики эмпирической функции для разных размеров подвыборок')
+plt.legend()
+plt.show()
+
+
+
 def summation(nakagami):
     """сумма элементов выборки"""
     summation = 0
